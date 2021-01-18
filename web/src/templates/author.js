@@ -57,6 +57,8 @@ export const query = graphql`
   }
 `;
 const AuthorPageTemplate = (props) => {
+  const { data, errors } = props;
+
   if (errors) {
     return (
       <Layout>
@@ -65,7 +67,6 @@ const AuthorPageTemplate = (props) => {
     );
   }
 
-  const { data, errors } = props;
   const { name, image, _rawBio: bio } = data && data.author;
   const postNodes = data && data.posts && mapEdgesToNodes(data.posts);
 
