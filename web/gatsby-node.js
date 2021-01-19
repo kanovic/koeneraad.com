@@ -76,7 +76,7 @@ async function createCategoryPages(graphql, actions) {
       if (!slug) return;
 
       // Make the URL with the current slug
-      const path = `/categories/${slug.current}`;
+      const path = `/category/${slug.current}`;
 
       // Create the page using the URL path and the template file, and pass down the id
       // that we can use to query for the right category in the template file
@@ -120,7 +120,7 @@ async function createAuthorPages(graphql, actions) {
       if (!slug) return;
 
       // Make the URL with the current slug
-      const path = `/authors/${slug.current}`;
+      const path = `/author/${slug.current}`;
 
       // Create the page using the URL path and the template file, and pass down the id
       // that we can use to query for the right category in the template file
@@ -132,10 +132,48 @@ async function createAuthorPages(graphql, actions) {
     });
 }
 
+async function createProjectPages(graphql, actions) {
+  const { createPage } = actions;
+  const result = await graphql(`
+    {
+      allSanityProject(filter: { slug: { current: { ne: null } }, publishedAt: { ne: null } }) {
+        edges {
+          node {
+            id
+            publishedAt
+            slug {
+              current
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  if (result.errors) throw result.errors;
+
+  const projectEdges = (result.data.allSanityProject || {}).edges || [];
+
+  projectEdges
+    .filter((edge) => !isFuture(edge.node.publishedAt))
+    .forEach((edge) => {
+      const id = edge.node.id;
+      const slug = edge.node.slug.current;
+      const path = `/project/${slug}/`;
+
+      createPage({
+        path,
+        component: require.resolve("./src/templates/project.js"),
+        context: { id },
+      });
+    });
+}
+
 exports.createPages = async ({ graphql, actions }) => {
   await createBlogPostPages(graphql, actions);
   await createCategoryPages(graphql, actions);
   await createAuthorPages(graphql, actions);
+  await createProjectPages(graphql, actions);
 };
 
 exports.createResolvers = ({ createResolvers }) => {
@@ -170,6 +208,27 @@ exports.createResolvers = ({ createResolvers }) => {
             query: {
               filter: {
                 authors: {
+                  elemMatch: {
+                    author: {
+                      _id: {
+                        eq: source._id,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          });
+        },
+      },
+      projects: {
+        type: ["SanityProject"],
+        resolve(source, args, context, info) {
+          return context.nodeModel.runQuery({
+            type: "SanityProject",
+            query: {
+              filter: {
+                members: {
                   elemMatch: {
                     author: {
                       _id: {

@@ -30,7 +30,7 @@ function AuthorList({ items, title }) {
               </div>
               <div>
                 <div>
-                  {<Link to={`/authors/${author.slug.current}`}>{authorName}</Link> || (
+                  {<Link to={`/author/${author.slug.current}`}>{authorName}</Link> || (
                     <em>Missing name</em>
                   )}
                 </div>
