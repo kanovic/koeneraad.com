@@ -11,6 +11,7 @@ import Container from "../components/container";
 import GraphQLErrorList from "../components/graphql-error-list";
 import SEO from "../components/seo";
 import Layout from "../containers/layout";
+import BlogPostPreviewGrid from "../components/blog-post-preview-list";
 
 export const query = graphql`
   fragment SanityImage on SanityMainImage {
@@ -125,11 +126,11 @@ const IndexPage = (props) => {
           <ProjectPreviewGrid
             title="Latest projects"
             nodes={projectNodes}
-            browseMoreHref="/archive/"
+            browseMoreHref="/projects/"
           />
         )}
         {postNodes && (
-          <BlogPostPreviewList
+          <BlogPostPreviewGrid
             title="Latest blog posts"
             nodes={postNodes}
             browseMoreHref="/archive/"

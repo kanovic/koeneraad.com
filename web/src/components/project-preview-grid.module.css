@@ -23,7 +23,7 @@
   grid-gap: 2em;
 
   @media (--media-min-small) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   @media (--media-min-medium) {
