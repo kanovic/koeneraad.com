@@ -48,6 +48,36 @@ export const query = graphql`
         }
       }
     }
+    projects: allSanityProject(
+      filter: {
+        categories: { elemMatch: { id: { eq: $id } } }
+        slug: { current: { ne: null } }
+        publishedAt: { ne: null }
+      }
+      sort: { fields: [publishedAt], order: DESC }
+    ) {
+      edges {
+        node {
+          id
+          publishedAt
+          mainImage {
+            ...SanityImage
+            alt
+          }
+          title
+          _rawExcerpt
+          slug {
+            current
+          }
+          categories {
+            slug {
+              current
+            }
+          }
+          _type
+        }
+      }
+    }
   }
 `;
 const CategoryPostTemplate = (props) => {
@@ -62,6 +92,7 @@ const CategoryPostTemplate = (props) => {
   }
 
   const postNodes = data && data.posts && mapEdgesToNodes(data.posts);
+  const projectNodes = data && data.projects && mapEdgesToNodes(data.projects);
   const { title, description } = data && data.category;
 
   return (
@@ -69,6 +100,9 @@ const CategoryPostTemplate = (props) => {
       <SEO title={title} description={description} />
       <Container>
         <h1 className={responsiveTitle1}>{title}</h1>
+        <h2>Projects</h2>
+        {projectNodes && projectNodes.length > 0 && <BlogPostPreviewGrid nodes={projectNodes} />}
+        <h2>Blog Posts</h2>
         {postNodes && postNodes.length > 0 && <BlogPostPreviewGrid nodes={postNodes} />}
       </Container>
     </Layout>

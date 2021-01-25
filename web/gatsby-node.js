@@ -76,7 +76,7 @@ async function createCategoryPages(graphql, actions) {
       if (!slug) return;
 
       // Make the URL with the current slug
-      const path = `/category/${slug.current}`;
+      const path = `/categories/${slug.current}`;
 
       // Create the page using the URL path and the template file, and pass down the id
       // that we can use to query for the right category in the template file
@@ -120,7 +120,7 @@ async function createAuthorPages(graphql, actions) {
       if (!slug) return;
 
       // Make the URL with the current slug
-      const path = `/author/${slug.current}`;
+      const path = `/authors/${slug.current}`;
 
       // Create the page using the URL path and the template file, and pass down the id
       // that we can use to query for the right category in the template file
@@ -159,7 +159,7 @@ async function createProjectPages(graphql, actions) {
     .forEach((edge) => {
       const id = edge.node.id;
       const slug = edge.node.slug.current;
-      const path = `/project/${slug}/`;
+      const path = `/projects/${slug}/`;
 
       createPage({
         path,
@@ -184,6 +184,25 @@ exports.createResolvers = ({ createResolvers }) => {
         resolve(source, args, context, info) {
           return context.nodeModel.runQuery({
             type: "SanityPost",
+            query: {
+              filter: {
+                categories: {
+                  elemMatch: {
+                    _id: {
+                      eq: source._id,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        },
+      },
+      projects: {
+        type: ["SanityProject"],
+        resolve(source, args, context, info) {
+          return context.nodeModel.runQuery({
+            type: "SanityProject",
             query: {
               filter: {
                 categories: {

@@ -23,14 +23,14 @@ function AuthorList({ items, title }) {
                         .height(100)
                         .fit("crop")
                         .url()}
-                      alt=""
+                      alt={author.name}
                     />
                   )}
                 </div>
               </div>
               <div>
                 <div>
-                  {<Link to={`/author/${author.slug.current}`}>{authorName}</Link> || (
+                  {<Link to={`/authors/${author.slug.current}`}>{authorName}</Link> || (
                     <em>Missing name</em>
                   )}
                 </div>

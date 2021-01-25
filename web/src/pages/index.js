@@ -5,13 +5,11 @@ import {
   filterOutDocsWithoutSlugs,
   filterOutDocsPublishedInTheFuture,
 } from "../lib/helpers";
-import BlogPostPreviewList from "../components/blog-post-preview-list";
-import ProjectPreviewGrid from "../components/project-preview-grid";
 import Container from "../components/container";
 import GraphQLErrorList from "../components/graphql-error-list";
 import SEO from "../components/seo";
 import Layout from "../containers/layout";
-import BlogPostPreviewGrid from "../components/blog-post-preview-list";
+import BlogPostPreviewList from "../components/blog-post-preview-list";
 
 export const query = graphql`
   fragment SanityImage on SanityMainImage {
@@ -60,6 +58,7 @@ export const query = graphql`
           slug {
             current
           }
+          _type
         }
       }
     }
@@ -81,6 +80,7 @@ export const query = graphql`
           slug {
             current
           }
+          _type
         }
       }
     }
@@ -123,14 +123,14 @@ const IndexPage = (props) => {
       <Container>
         <h1 hidden>Welcome to {site.title}</h1>
         {projectNodes && (
-          <ProjectPreviewGrid
+          <BlogPostPreviewList
             title="Latest projects"
             nodes={projectNodes}
             browseMoreHref="/projects/"
           />
         )}
         {postNodes && (
-          <BlogPostPreviewGrid
+          <BlogPostPreviewList
             title="Latest blog posts"
             nodes={postNodes}
             browseMoreHref="/archive/"

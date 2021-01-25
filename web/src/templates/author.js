@@ -1,26 +1,21 @@
 import React from "react";
 import { graphql } from "gatsby";
-import Img from "gatsby-image";
-import { mapEdgesToNodes } from "../lib/helpers";
+import { mapEdgesToNodes, buildImageObj } from "../lib/helpers";
+import { imageUrlFor } from "../lib/image-url";
 import BlogPostPreviewGrid from "../components/blog-post-preview-grid";
-import ProjectPreviewGrid from "../components/project-preview-grid";
+import PortableText from "../components/portableText";
 import Container from "../components/container";
 import GraphQLErrorList from "../components/graphql-error-list";
 import SEO from "../components/seo";
 import Layout from "../containers/layout";
-
-import { responsiveTitle1 } from "../components/typography.module.css";
+import styles from "../components/author.module.css";
 
 export const query = graphql`
   query AuthorTemplateQuery($id: String!) {
     author: sanityAuthor(id: { eq: $id }) {
       name
       image {
-        asset {
-          fluid {
-            ...GatsbySanityImageFluid
-          }
-        }
+        ...SanityImage
         alt
         caption
       }
@@ -76,6 +71,7 @@ export const query = graphql`
           slug {
             current
           }
+          _type
         }
       }
     }
@@ -92,24 +88,38 @@ const AuthorPageTemplate = (props) => {
     );
   }
 
-  const { name, image, _rawBio: bio } = data && data.author;
+  const { name, image, _rawBio } = data && data.author;
   const postNodes = data && data.posts && mapEdgesToNodes(data.posts);
   const projectNodes = data && data.projects && mapEdgesToNodes(data.projects);
-
-  console.log(bio);
 
   return (
     <Layout>
       <SEO title={`Blog author ${name}`} description={image.caption} />
-      <Container>
-        <h1 className={responsiveTitle1}>{name}</h1>
-        <Img fluid={image.asset.fluid} />
-        <figcaption>{image.caption}</figcaption>
-        <h2>Projects</h2>
-        {projectNodes && projectNodes.length > 0 && <ProjectPreviewGrid nodes={projectNodes} />}
-        <h2>Posts</h2>
-        {postNodes && postNodes.length > 0 && <BlogPostPreviewGrid nodes={postNodes} />}
-      </Container>
+      <article className={styles.root}>
+        {image && image.asset && (
+          <div className={styles.mainImage}>
+            <img
+              src={imageUrlFor(buildImageObj(image))
+                .width(1200)
+                .height(Math.floor((9 / 16) * 1200))
+                .fit("crop")
+                .auto("format")
+                .url()}
+              alt={image.alt}
+            />
+          </div>
+        )}
+        <Container>
+          <div className={styles.mainContent}>
+            <h1 className={styles.title}>{name}</h1>
+            {_rawBio && <PortableText blocks={_rawBio} />}
+          </div>
+          <h2>Projects</h2>
+          {projectNodes && projectNodes.length > 0 && <BlogPostPreviewGrid nodes={projectNodes} />}
+          <h2>Posts</h2>
+          {postNodes && postNodes.length > 0 && <BlogPostPreviewGrid nodes={postNodes} />}
+        </Container>
+      </article>
     </Layout>
   );
 };

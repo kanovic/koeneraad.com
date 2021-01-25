@@ -22,14 +22,14 @@ function RoleList({ items, title }) {
                       .height(100)
                       .fit("crop")
                       .url()}
-                    alt=""
+                    alt={item.author.name}
                   />
                 )}
               </div>
             </div>
             <div>
               <div>
-                <Link to={`/author/${item.author.slug.current}`}>
+                <Link to={`/authors/${item.author.slug.current}`}>
                   <strong>{(item.author && item.author.name) || <em>Missing name</em>}</strong>
                 </Link>
               </div>

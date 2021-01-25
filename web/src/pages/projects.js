@@ -1,7 +1,7 @@
 import React from "react";
 import { graphql } from "gatsby";
 import { mapEdgesToNodes } from "../lib/helpers";
-import ProjectPreviewGrid from "../components/project-preview-grid";
+import BlogPostPreviewGrid from "../components/blog-post-preview-grid";
 import Container from "../components/container";
 import GraphQLErrorList from "../components/graphql-error-list";
 import SEO from "../components/seo";
@@ -28,6 +28,7 @@ export const query = graphql`
           slug {
             current
           }
+          _type
         }
       }
     }
@@ -52,7 +53,7 @@ const ProjectPage = (props) => {
       <SEO title="Projects" />
       <Container>
         <h1 className={responsiveTitle1}>Projects</h1>
-        {projectNodes && projectNodes.length > 0 && <ProjectPreviewGrid nodes={projectNodes} />}
+        {projectNodes && projectNodes.length > 0 && <BlogPostPreviewGrid nodes={projectNodes} />}
       </Container>
     </Layout>
   );
