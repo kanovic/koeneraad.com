@@ -28,7 +28,7 @@ function RoleList({ items, title }) {
               </div>
             </div>
             <div>
-              <div>
+              <div className={styles.mainContent}>
                 <Link to={`/authors/${item.author.slug.current}`}>
                   <strong>{(item.author && item.author.name) || <em>Missing name</em>}</strong>
                 </Link>

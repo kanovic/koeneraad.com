@@ -59,7 +59,9 @@ function Project(props) {
                   {relatedProjects.map((project) => (
                     <li key={`related_${project._id}`}>
                       {project.slug ? (
-                        <Link to={`/projects/${project.slug.current}`}>{project.title}</Link>
+                        <div>
+                          <Link to={`/projects/${project.slug.current}`}>{project.title}</Link>
+                        </div>
                       ) : (
                         <span>{project.title}</span>
                       )}
