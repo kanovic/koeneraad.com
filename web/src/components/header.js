@@ -11,12 +11,16 @@ const Header = ({ onHideNav, onShowNav, showNav, siteTitle }) => (
     <div className={styles.wrapper}>
       <div className={styles.branding}>
         {/* <Link to='/'>{siteTitle}</Link> */}
-        <Link to="/">
+        <Link to="/" title="Go to Homepage">
           <Logo />
         </Link>
       </div>
 
-      <button className={styles.toggleNavButton} onClick={showNav ? onHideNav : onShowNav}>
+      <button
+        aria-label="menu"
+        className={styles.toggleNavButton}
+        onClick={showNav ? onHideNav : onShowNav}
+      >
         <Icon symbol="hamburger" />
       </button>
 
